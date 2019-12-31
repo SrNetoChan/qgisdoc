@@ -1,3 +1,7 @@
+.. only:: html
+
+   |updatedisclaimer|
+
 .. _editingvector:
 
 *********
@@ -9,8 +13,8 @@
    .. contents::
       :local:
 
-QGIS has various capabilities for editing OGR, SpatiaLite, PostGIS,
-MSSQL Spatial and Oracle Spatial vector layers and tables.
+QGIS supports various capabilities for editing OGR,
+SpatiaLite, PostGIS, MSSQL Spatial and Oracle Spatial vector layers and tables.
 
 .. note::
    The procedure for editing GRASS layers is different - see section
@@ -20,9 +24,8 @@ MSSQL Spatial and Oracle Spatial vector layers and tables.
 
 .. tip:: **Concurrent Edits**
 
-   This version of QGIS does not track if somebody else is editing the
-   same feature at the same time as you are.
-   The last person to save the edits wins.
+   This version of QGIS does not track if somebody else is editing the same feature
+   at the same time as you are. The last person to save its edits wins.
 
 
 .. index:: Snapping
@@ -33,116 +36,100 @@ MSSQL Spatial and Oracle Spatial vector layers and tables.
 Setting the Snapping Tolerance and Search Radius
 ================================================
 
-For optimal and accurate editing of vector layer geometries, we need
-to set an appropriate value of snapping tolerance and search radius for
-features vertices.
+For an optimal and accurate edit of the vector layer geometries, we need to set
+an appropriate value of snapping tolerance and search radius for features vertices.
+
 
 .. index:: Snapping tolerance
 
 Snapping tolerance
 ------------------
 
-When you add a new vertex or move an existing one, the snapping
-tolerance is the distance QGIS uses to search for the closest vertex
-or segment you are trying to connect to.
-If you are not within the snapping tolerance, QGIS will leave the
-vertex where you release the mouse button, instead of snapping
-it to an existing vertex or segment.
-
+Snapping tolerance is the distance QGIS uses to ``search`` for the closest
+vertex and/or segment you are trying to connect to when you set a new vertex or
+move an existing vertex. If you aren't within the snapping tolerance, QGIS
+will leave the vertex where you release the mouse button, instead of snapping
+it to an existing vertex and/or segment.
 The snapping tolerance setting affects all tools that work with tolerance.
 
-You can enable / disable snapping by using the |snapping| :sup:`Enable
-snapping` button on the :guilabel:`Snapping Toolbar` or pressing :kbd:`s`.
-The snapping mode, tolerance value, and units can also be configured in
-this toolbar.
+#. A general, project-wide snapping tolerance can be defined by choosing
+   :menuselection:`Settings -->` |options| :menuselection:`Options...`,
+   :guilabel:`Digitizing` tab.
+   You can select between 'To vertex', 'To segment' or 'To vertex and segment'
+   as default snap mode. You can also define a default snapping tolerance and
+   a search radius for vertex edits. The tolerance can be set either in map
+   units or in pixels. The advantage of choosing pixels is that the snapping
+   tolerance doesn't have to be changed after zoom operations. In our small
+   digitizing project (working with the Alaska dataset), we define the
+   snapping units in feet. Your results may vary, but something on the order
+   of 300 ft at a scale of 1:10000 should be a reasonable setting.
+#. A layer-based snapping tolerance that overrides the global snapping options
+   can be defined by choosing :menuselection:`Project --> Snapping options`.
+   It helps to enable and adjust snapping mode and tolerance on a layer basis
+   (see figure_edit_snapping_). This dialog offers three different modes to
+   select the layer(s) to snap to:
 
-The snapping configuration can also be set in
-:menuselection:`Project --> Snapping Options...`.
+   * :guilabel:`Current layer`: only the active layer is used, a convenient way
+     to ensure topology within the layer being edited
+   * :guilabel:`All layers`: a quick and simple setting for all visible layers
+     in the project so that the pointer snaps to all vertices and/or segments.
+     In most cases it is sufficient to use this snapping mode.
+   * :guilabel:`Advanced`: if you need to edit a layer and snap its vertices to another
+     layer, ensure the target layer is checked and increase the snapping tolerance
+     to a greater value. Furthermore, snapping will never occur to a layer that
+     is not checked in the snapping options dialog, regardless of the global
+     snapping tolerance. So be sure to mark the checkbox for those layers that
+     you need to snap to.
 
-There are three options to select the layer(s) to snap to:
-
-* :guilabel:`All layers`: quick setting for all visible layers in the
-  project so that the pointer snaps to all vertices and/or segments.
-  In most cases, it is sufficient to use this snapping mode, but beware
-  when using it for projects with many vector layers, as it may affect
-  performance.
-* :guilabel:`Current layer`: only the active layer is used, a convenient
-  way to ensure topological consistency within the layer being edited.
-* :guilabel:`Advanced Configuration`: allows you to enable and adjust
-  snapping mode and tolerance on a layer basis (see figure_edit_snapping_).
-  If you need to edit a layer and snap its vertices to another, make
-  sure that the target layer is checked and increase the snapping
-  tolerance to a higher value.
-  Snapping will not occur to a layer that is not checked in the
-  snapping options dialog.
-
-As for snapping mode, you can choose between ``To vertex``, ``To segment``,
-and ``To vertex and segment``.
-
-The tolerance values can be set either in the project's ``map units``
-or in ``pixels``.
-The advantage of choosing ``pixels`` is that it keeps the snapping
-constant at different map scales.
-10 to 12 pixels is normally a good value, but it depends on the DPI of
-your screen.
-Using map units allows the tolerance to be related to real ground
-distances.
-For example, if you have a minimum distance between elements, this
-option can be useful to ensure that you don’t add vertices too close to
-each other.
 
 .. _figure_edit_snapping:
 
 .. figure:: img/editProjectSnapping.png
    :align: center
 
-   Snapping options (Advanced Configuration mode)
+   Edit snapping options on a layer basis (Advanced mode)
 
-.. note::
+.. tip:: **Control the list of layers to snap**
 
-   By default, only visible features (the features whose style is displayed,
-   except for layers where the symbology is "No symbols") can be snapped.
-   You can enable the snapping on invisible features by checking |unchecked|
-   :guilabel:`Enable snapping on invisible features` under the
-   :menuselection:`Settings --> Options --> Digitizing` tab.
+   The :guilabel:`Snapping Options` dialog is by default populated with parameters
+   (mode, tolerance, units) set in the global :guilabel:`Digitizing` tab.
+   To avoid layers being checked by default in the **Advanced** mode and hence
+   set snappable, define the :guilabel:`Default Snap mode` to ``Off``.
 
-.. tip:: **Enable snapping by default**
+.. tip:: **Quickly toggle snapping**
 
-   You can set snapping to be enabled by default on all new projects in the
-   :menuselection:`Settings --> Options --> Digitizing` tab.
-   You can also set the default snapping mode, tolerance value, and units,
-   which will populate the :guilabel:`Snapping Options` dialog.
+   You can quickly enable or disable snapping by clicking the |snapping| :sup:`Enable
+   Snapping` icon or pressing :kbd:`S` at any time while you're in the map view.
 
-.. index:: Snapping on intersections
+Snapping tolerance can be set in ``pixels`` or ``map units`` (the units of the
+map view). While in the **Advanced** layer selection mode, it is possible to use
+a snapping tolerance that refers to ``layer units``, the units of the reprojected
+layer when 'on-the-fly' CRS transformation is on.
 
-Enable snapping on intersections
----------------------------------
-
-Another available option is to use |snappingIntersection| :guilabel:`snapping on
-intersection`, which allows you to snap to geometry intersections of
-snapping enabled layers, even if there are no vertices at the intersections.
+By default, only visible features (the features whose style is displayed,
+except for layers where the symbology is "No symbols") can be snapped.
+You can enable the snapping on invisible features by checking
+|unchecked| :guilabel:`Enable snapping on invisible features` under
+:menuselection:`Settings -->` |options| :menuselection:`Options --> Digitizing` tab.
 
 .. index:: Search radius
 
 Search radius
 --------------
 
-:guilabel:`Search radius for vertex edits` is the distance QGIS uses
-to ``search`` for the vertex to select when you click on the map.
-If you are not within the search radius, QGIS will not find and select
-any vertex for editing.
-The search radius for vertex edits can be defined under the
-:menuselection:`Settings -->` |options|
-:menuselection:`Options --> Digitizing` tab (this is where you define
-the snapping default values).
+Search radius is the distance QGIS uses to ``search`` for the closest vertex
+you are trying to select when you click on the map. If you aren't within the
+search radius, QGIS won't find and select any vertex for editing.
+The search radius for vertex edits can be defined under :menuselection:`Settings -->`
+|options| :menuselection:`Options --> Digitizing` tab. This is the same
+place where you define the general, project-wide snapping tolerance.
 
-Snap tolerance and search radius are set in ``map units`` or ``pixels``.
-You may need to experiment to get them right.
-If you specify a too big tolerance, QGIS may snap to the wrong vertex,
-especially if you are dealing with a large number of vertices in close
-proximity.
-The smaller the search radius, the more difficult it will be to hit
-what you want to move.
+Snap tolerance and search radius are set in ``map units`` or ``pixels``, so you may
+find you need to experiment to get them set right. If you specify too big of
+a tolerance, QGIS may snap to the wrong vertex, especially if you are dealing
+with a large number of vertices in close proximity. Set search radius too
+small, and it won't find anything to move.
+
 
 
 .. index:: Topological editing
@@ -151,10 +138,11 @@ what you want to move.
 Topological editing
 ===================
 
-In addition to these snapping options, the :guilabel:`Snapping options...``
-dialog (:menuselection:`Project --> Snapping options`) and the
-:guilabel:`Snapping` toolbar allow you to enable / disable some other
-topological functionalities.
+Besides layer-based snapping options, you can also define topological
+functionalities in the :guilabel:`Snapping options...` dialog in the
+:menuselection:`Settings` (or :menuselection:`File`) menu. Here, you can
+define |checkbox| :guilabel:`Enable topological editing`, and/or for polygon
+layers, activate the |checkbox| :guilabel:`Avoid Intersections` option.
 
 
 .. index:: Shared polygon boundaries
@@ -163,41 +151,44 @@ topological functionalities.
 Enable topological editing
 --------------------------
 
-The |topopologicalEditing| :sup:`Topological editing` button helps
-when editing and maintaining features with common boundaries.
-With this option enabled, QGIS 'detects' shared boundaries.
-When you move common vertices/segments, QGIS will also move them in
-the geometries of the neighboring features.
+The option |checkbox| :guilabel:`Enable topological editing` is for editing
+and maintaining common boundaries in features mosaics. QGIS 'detects'
+shared boundary by the features, so you only have to move a common vertex/segment
+once, and QGIS will take care of updating the neighboring features.
 
-Topological editing works with features from different layers, as long
-as the layers are visible and in editing mode.
+.. index:: Avoid intersections
+   seealso: Avoid intersections; Topology
+
+Avoid intersections of new polygons
+-----------------------------------
+
+A second topological option called |checkbox| :guilabel:`Avoid intersections`
+prevents you to draw new features that overlap an existing one.
+It is for quicker digitizing of adjacent
+polygons. If you already have one polygon, it is possible with this option
+to digitize the second one such that both intersect, and QGIS then cuts the
+second polygon to the boundary of the existing one. The advantage is that you
+don't have to digitize all vertices of the common boundary.
+
+.. note:: If the new geometry is totally covered by existing ones, it gets cleared
+   and the new feature will have no geometry when allowed by the provider, otherwise
+   saving modifications will make QGIS pop-up an error message.
+
+.. warning:: **Use cautiously the** :guilabel:`Avoid Intersections` **option**
+
+   Because the option cuts or clears geometry of any overlaping feature from
+   any polygon layer, do not forget to uncheck this option once you no longer
+   need it otherwise, you can get unexpected geometries.
 
 
-.. index:: Avoid overlap
-   seealso: Avoid overlap; Topology
+.. index:: Snapping on intersections
 
-Avoid overlap of new polygons
------------------------------
+Enable snapping on intersections
+---------------------------------
 
-When the snapping mode is set to ``Advanced configuration``, for polygon layers,
-there's an option called |checkbox| :guilabel:`Avoid overlap`. This option
-prevents you from drawing new features that overlap existing ones in the
-selected layer, speeding up digitizing of adjacent polygons.
-
-With avoid overlap enabled, if you already have one polygon, you can digitize
-a second one such that they intersect. QGIS will then cut the second polygon to the
-boundary of the existing one. The advantage is that you don't have to
-digitize all vertices of the common boundary.
-
-.. note:: If the new geometry is totally covered by existing ones, it gets
-   cleared, and QGIS will show an error message.
-
-.. warning:: **Use cautiously the** :guilabel:`Avoid overlap` **option**
-
-   Since this option will cut new overlapping geometries of any polygon layer,
-   you can get unexpected geometries if you forget to uncheck it when no longer
-   needed.
-
+Another option is to use |checkbox| :guilabel:`Enable snapping on intersection`.
+It allows you to snap on an intersection of background layers, even if there's no vertex on
+the intersection.
 
 Geometry Checker
 -----------------
@@ -214,37 +205,31 @@ more information on this plugin at :ref:`geometry_checker`.
 Automatic Tracing
 -----------------
 
-Usually, when using capturing map tools (add feature, add part, add
-ring, reshape and split), you need to click each vertex of the feature.
-With the automatic tracing mode, you can speed up the digitization
-process as you no longer need to manually place all the vertices during
-digitization:
+Usually, when using capturing map tools (add feature, add part, add ring, reshape
+and split), you need to click each vertex of the feature.
+With the automatic tracing mode, you can speed up the digitization process as
+you no longer need to manually place all the vertices during digitization:
 
-#. Enable the |tracing| :sup:`Tracing` tool by pushing the icon or
-   pressing :kbd:`T` key.
-#. :ref:`Snap to <snapping_tolerance>` a vertex or segment of a feature
-   you want to trace along.
-#. Move the mouse over another vertex or segment you'd like to snap and,
-   instead of the usual straight line, the digitizing rubber band
-   represents a path from the last point you snapped to the current
-   position.
-
-   QGIS actually uses the underlying features topology to build the
-   shortest path between the two points.
-   Tracing requires snapping to be activated in traceable layers to build
-   the path.
-   You should also snap to an existing vertex or segment while digitizing
-   and ensure that the two nodes are topologically connectable through
-   existing features edges, otherwise QGIS is unable to connect them and
+#. Enable the |tracing| :sup:`Tracing` tool by pushing the icon or pressing
+   :kbd:`T` key.
+#. :ref:`Snap to <snapping_tolerance>` a vertex or segment of a feature you
+   want to trace along.
+#. Move the mouse over another vertex or segment you'd like to snap and, instead
+   of the usual straight line, the digitizing rubber band represents a path from
+   the last point you snapped to the current position.
+   
+   QGIS actually uses the underlying features topology to build the shortest path
+   between the two points. Tracing requires snapping to be activated in traceable
+   layers to build the path. You should also snap to an existing vertex or segment
+   while digitizing and ensure that the two nodes are topologically connectable
+   through existing features edges, otherwise QGIS is unable to connect them and
    thus traces a single straight line.
-#. Click and QGIS places the intermediate vertices following the displayed
-   path.
+#. Click and QGIS places the intermediate vertices following the displayed path.
 
-Unfold the |tracing| :sup:`Enable Tracing` icon and set the
-:guilabel:`Offset` option to digitize a path parallel to the features
-instead of tracing along them.
-A positive value shifts the new drawing to the left side of the tracing
-direction and a negative value does the opposite.
+Unfold the |tracing| :sup:`Enable Tracing` icon and set the :guilabel:`Offset`
+option to digitize a path parallel to the features instead of tracing along them;
+a positive value shifts the new drawing to the left side of the tracing direction
+and a negative value does the opposite.
 
 .. note:: **Adjust map scale or snapping settings for an optimal tracing**
 
@@ -252,20 +237,11 @@ direction and a negative value does the opposite.
    potentially long tracing structure preparation and large memory overhead.
    After zooming in or disabling some layers the tracing is enabled again.
 
-.. note:: **Does not add topological points**
+.. tip:: **Quickly enable or disable automatic tracing by pressing the** :kbd:`T` **key**
 
-   This tool does not add points to existing polygon geometries even
-   if :guilabel:`Topological editing` is enabled.
-   If geometry precision is activated on the edited layer, the resulting
-   geometry might not exactly follow an existing geometry.
-
-.. tip:: **Quickly enable or disable automatic tracing by pressing the**
-   :kbd:`t` **key**
-
-   By pressing the :kbd:`t` key, tracing can be enabled/disabled
-   anytime (even while digitizing a feature), so it is possible to
-   digitize parts of the feature with tracing enabled and other
-   parts with tracing disabled.
+   By pressing the :kbd:`T` key, tracing can be enabled/disabled anytime even while
+   digitizing one feature, so it is possible to digitize some parts of the feature
+   with tracing enabled and other parts with tracing disabled.
    Tools behave as usual when tracing is disabled.
 
 
@@ -281,28 +257,23 @@ Digitizing an existing layer
 By default, QGIS loads layers read-only. This is a safeguard to avoid
 accidentally editing a layer if there is a slip of the mouse.
 However, you can choose to edit any layer as long as the data provider
-supports it (see :ref:`supported_format`), and the underlying data source
-is writable (i.e., its files are not read-only).
+supports it (see :ref:`supported_format`), and the underlying data source is writable
+(i.e., its files are not read-only).
 
 .. tip:: **Restrict edit permission on layers within a project**
 
-   From the
-   :menuselection:`Project --> Properties... --> Data Sources -->
-   Layers Capabilities` table, you can choose to set any layer
-   read-only regardless the provider permission.
-   This can be a handy way, in a multi-users environment to avoid
-   unauthorized users to mistakenly edit layers (e.g., Shapefile),
-   hence potentially corrupt data.
+   From the :menuselection:`Project --> Properties... --> Data Sources --> Layers Capabilities` table,
+   You can choose to set any layer read-only regardless the provider permission.
+   This can be a handy way, in a multi-users environment to avoid unauthorized users
+   to mistakenly edit layers (e.g., Shapefile), hence potentially corrupt data.
    Note that this setting only applies inside the current project.
 
-In general, tools for editing vector layers are divided into a
-digitizing and an advanced digitizing toolbar, described in section
-:ref:`sec_advanced_edit`.
-You can select and unselect both under
-:menuselection:`View --> Toolbars -->`.
 
-Using the basic digitizing tools, you can perform the following
-functions:
+In general, tools for editing vector layers are divided into a digitizing and an advanced
+digitizing toolbar, described in section :ref:`sec_advanced_edit`. You can
+select and unselect both under :menuselection:`View --> Toolbars -->`.
+Using the basic digitizing tools, you can perform the following functions:
+
 
 .. _table_editing:
 
@@ -322,7 +293,7 @@ functions:
 | |multiEdit|                  | Modify the attributes of all      |                          |                                  |
 |                              | selected features simultaneously  |                          |                                  |
 +------------------------------+-----------------------------------+--------------------------+----------------------------------+
-| |deleteSelectedFeatures|     | Delete Selected                   ||editCut|                 | Cut Features                     |
+| |deleteSelected|             | Delete Selected                   ||editCut|                 | Cut Features                     |
 +------------------------------+-----------------------------------+--------------------------+----------------------------------+
 | |editCopy|                   | Copy Features                     | |editPaste|              | Paste Features                   |
 +------------------------------+-----------------------------------+--------------------------+----------------------------------+
@@ -331,27 +302,24 @@ functions:
 
 Table Editing: Vector layer basic editing toolbar
 
-Note that while using any of the digitizing tools, you can still
-:ref:`zoom or pan <zoom_pan>` in the map canvas without losing the
-focus on the tool.
+Note that while using any of the digitizing tools, you can still :ref:`zoom or pan
+<zoom_pan>` in the map canvas without losing the focus on the tool.
 
-All editing sessions start by choosing the |toggleEditing|
-:sup:`Toggle editing` option found in the context menu of a given layer,
-from the attribute table dialog, the digitizing toolbar or the
-:menuselection:`Edit` menu.
+All editing sessions start by choosing the |toggleEditing| :sup:`Toggle editing`
+option found in the context menu of a given layer, from the attribute table dialog, the
+digitizing toolbar or the :menuselection:`Edit` menu.
 
-Once the layer is in edit mode, additional tool buttons on the editing
-toolbar will become available and markers will appear at the vertices
-of all features unless
-:guilabel:`Show markers only for selected features` option under
+Once the layer is in edit mode, additional tool buttons on the editing toolbar
+will become available and markers will appear at the vertices of all features
+unless :guilabel:`Show markers only for selected features` option under
 :menuselection:`Settings --> Options... --> Digitizing` menu is checked.
 
 .. _tip_save_regularly:
 
 .. tip:: **Save Regularly**
 
-   Remember to |saveEdits| :sup:`Save Layer Edits` regularly.
-   This will also check that your data source can accept all the changes.
+   Remember to |saveEdits| :sup:`Save Layer Edits` regularly. This will also
+   check that your data source can accept all the changes.
 
 .. index:: Adding features, Rubber band
 .. _add_feature:
@@ -369,21 +337,16 @@ button and you can enter attributes in the feature form that opens.
 To create features with the spatially enabled tools, you first digitize the
 geometry then enter its attributes. To digitize the geometry:
 
-#. Left-click on the map area to create the first point of your new feature.
-   For point features, this should be enough and trigger, if required,
-   the feature form to fill in their attributes. Having set the
-   :ref:`geometry precision <digitizingmenu>` in the layer properties
-   you can use :ref:`snap to grid <snap_to_grid>` here to create features
-   based on a regular distance.
+#. Left-click on the map area to create the first point of your new feature. For
+   point features, this should be enough and trigger, if required, the feature
+   form to fill in their attributes.
 #. For line or polygon geometries, keep on left-clicking for each additional
-   point you wish to capture or use :ref:`automatic tracing <tracing>`
-   capability to accelerate the digitization.
-   This will create consecutive straight lines between the vertices you
-   place.
+   point you wish to capture or use :ref:`automatic tracing <tracing>` capability
+   to accelerate the digitization. This will create consecutive straight lines
+   between the vertices you place.
 
    .. note::
-    Pressing :kbd:`Delete` or :kbd:`Backspace` key reverts the last
-    node you add.
+    Pressing :kbd:`Delete` or :kbd:`Backspace` key reverts the last node you add.
 
 #. When you have finished adding points, right-click anywhere on the map area
    to confirm you have finished entering the geometry of that feature.
@@ -407,11 +370,10 @@ geometry then enter its attributes. To digitize the geometry:
    new river in Alaska. However, in the :guilabel:`Digitizing` menu under the
    :menuselection:`Settings --> Options` menu, you can also activate:
 
-   * |checkbox| :guilabel:`Suppress attributes pop-up windows after
-     each created feature` to avoid the form opening;
-   * or |checkbox| :guilabel:`Reuse last entered attribute values` to
-     have fields automatically filled at the opening of the form and
-     just have to type changing values.
+   * |checkbox| :guilabel:`Suppress attributes pop-up windows after each created
+     feature` to avoid the form opening;
+   * or |checkbox| :guilabel:`Reuse last entered attribute values` to have fields
+     automatically filled at the opening of the form and just have to type changing values.
 
 .. _figure_edit_values:
 
@@ -429,20 +391,18 @@ Vertex tool
 
 .. note:: **QGIS 3 major changes**
 
-    In QGIS 3, the node tool has been fully redesigned and renamed to *vertex tool*.
-    It was previously
+    In QGIS 3, the node tool has been fully redesigned and renamed. It was previously
     working with "click and drag" ergonomy, and now uses a "click - click"
     workflow. This allows major improvements like taking profit of the advanced
     digitizing panel with the vertex tool while digitizing or editing objects of
     multiple layers at the same time.
-
 
 For any editable vector layer, the
 |vertexToolActiveLayer| :sup:`Vertex tool (Current Layer)` provides manipulation
 capabilities of
 feature vertices similar to CAD programs. It is possible to simply select
 multiple vertices at once and to move, add or delete them altogether.
-The vertex tool also supports
+The vertex tool also works with 'on the fly' projection turned on and supports
 the topological editing feature. This tool is selection persistent, so when some
 operation is done, selection stays active for this feature and tool.
 
@@ -490,18 +450,13 @@ Red circles will appear when hovering vertices.
      Batch vertex selection using :kbd:`Shift+R`
 
 
-  Press :kbd:`Ctrl` will invert the selection, selecting the longest
-  path along the feature boundary.
-  Ending your node selection with a second click, or pressing :kbd:`Esc`
-  will escape the batch mode.
+  Press :kbd:`Ctrl` will invert the selection, selecting the longest path
+  along the feature boundary. Ending your node selection with a second click, or pressing :kbd:`Esc` will escape the batch mode.
 
-* **Adding vertices**: To add a vertex, a virtual new node appears on
-  the segment center.
-  Simply grab it to add a new vertex.
-  A double-click on any location of the boundary also creates a new
-  node.
-  For lines, a virtual node is also proposed at both extremities of a
-  line to extend it.
+* **Adding vertices**: To add a vertex, a virtual new node appears on the segment
+  center. Simply grab it to add a new vertex. Double click on any location of the boundary
+  also creates a new node. For lines, a virtual node is also proposed at both
+  extremities of a line to extend it.
 
   .. _figure_vertex_add_node:
 
@@ -510,69 +465,49 @@ Red circles will appear when hovering vertices.
 
      Virtual nodes for adding vertices
 
-* **Deleting vertices**: Select the vertices and click the
-  :kbd:`Delete` key.
-  Deleting all the vertices of a feature generates, if compatible with
-  the datasource, a geometryless feature. Note that this doesn't delete
-  the complete feature, just the geometry part.
-  To delete a complete feature use the |deleteSelectedFeatures|
-  :sup:`Delete Selected` tool.
+* **Deleting vertices**: Select the vertices and click the :kbd:`Delete` key.
+  Deleting all the vertices of a feature generates, if compatible with the datasource,
+  a geometryless feature. Note that this doesn't delete the complete feature, just the geometry part;
+  To delete a complete feature use the |deleteSelected| :sup:`Delete Selected` tool.
 
-* **Moving vertices**: Select all the vertices you want to move, click
-  on a selected vertex or edge, and click again on the desired new
-  location.
-  All the selected vertices will move together. If snapping is enabled,
-  the whole selection can jump to the nearest vertex or line.
-  You can use Advanced Digitizing Panel constraints for distance,
-  angles, exact X Y location before the second click.
-
-  .. _snap_to_grid:
-
-  Here you can use the snap-to-grid feature. Having set a value for the
-  :ref:`geometry precision <digitizingmenu>` in the layer properties,
-  a grid appears on a zoom level according to the Geometry precision.
-
-  .. _figure_vertex_snap_to_grid:
-
-  .. figure:: img/vertex_snap_to_grid.png
-     :align: center
-
-     Selecting a vertex and moving the vertices to grid
+* **Moving vertices**: Select all the vertices you want to move, click on
+  a selected vertex or edge, and click again on the desired new location. All
+  the selected vertices will move together. If snapping is enabled, the whole
+  selection can jump to the nearest vertex or line. You can use Advanced
+  Digitizing Panel constraints for distance, angles, exact X Y location
+  before the second click.
 
 Each change made with the vertex  is stored as a separate entry in the
-:guilabel:`Undo` dialog. Remember that all operations support
-topological editing when this is turned on.
-On-the-fly projection is also supported, and the vertex tool provides
-tooltips to identify a vertex by hovering the pointer over it.
+:guilabel:`Undo` dialog. Remember that all operations support topological editing when
+this is turned on. On-the-fly projection is also supported, and the node
+tool provides tooltips to identify a vertex by hovering the pointer over it.
 
 .. index:: Vertex editor panel
 
 The Vertex Editor Panel
 .......................
 
-When using the :guilabel:`Vertex tool` on a feature, it is possible to
-right click to open the :guilabel:`Vertex Editor` panel listing all the
-vertices of the feature with their :guilabel:`x`, :guilabel:`y`
-(:guilabel:`z`, :guilabel:`m` if applicable) coordinates and
-:guilabel:`r` (for the radius, in case of circular geometry).
-Simply select a row in the table does select the corresponding vertex
-in the map canvas, and vice versa.
-Simply change a coordinate in the table and your vertex position is
-updated.
-You can also select multiple rows and delete them altogether.
+When using the :guilabel:`Vertex tool` on a feature, it is possible to right click to open the
+:guilabel:`Vertex Editor` panel listing all the vertices of the feature with
+their :guilabel:`x`, :guilabel:`y` (:guilabel:`z`, :guilabel:`m` if applicable)
+coordinates and :guilabel:`r` (for the radius, in case of
+circular geometry). Simply select a row in the table does select the corresponding
+vertex in the map canvas, and vice versa. Simply change a coordinate in the table
+and your vertex position is updated. You can also select multiple rows and delete
+them altogether.
 
-.. note:: **Changed behavior in QGIS 3.4**
+.. note:: **Changed behavior in QGIS3**
 
-   Right click on a feature will immediately show the vertex editor and
-   lock this feature, thus disabling the editing of any other features.
-   While being locked, a feature is exclusive for editing: Selecting
-   and moving of vertices and segments by clicking or dragging is only
-   possible for this feature.
-   New vertices can only be added to the locked feature.
-   Also, the vertex editor panel now opens itself automatically upon
-   activating the vertex tool, and its position/docked state remembered
-   across uses.
+  In QGIS 2.x, the panel was opening each time the vertex tool was used which was
+  slow and confusing when editing big features. Now, just invoke it with a
+  right - click.
 
+  .. _figure_right_click_button_vertex_editor_panel:
+
+  .. figure:: img/vertex_editor_panel_contextual_button.png
+     :align: center
+
+     Button to open the vertex editor panel via right-click
 
 
 .. _figure_edit_vertex:
@@ -597,27 +532,23 @@ QGIS project, as long as destination layers are set to |toggleEditing|
 
 .. tip:: **Transform polygon into line and vice-versa using copy/paste**
 
-   Copy a line feature and paste it in a polygon layer:
-   QGIS pastes in the target layer a polygon whose boundary corresponds
-   to the closed geometry of the line feature.
-   This is a quick way to generate different geometries of the same
-   data.
+   Copy a line feature and paste it in a polygon layer: QGIS pastes in the target
+   layer a polygon whose boundary corresponds to the closed geometry of the line
+   feature. This is a quick way to generate different geometries of the same data.
 
 .. index:: CSV, WKT, GeoJSON
 
-Features can also be pasted to external applications as text.
-That is, the features are represented in CSV format, with the geometry
-data appearing in the OGC Well-Known Text (WKT) format.
-WKT and GeoJSON features from outside QGIS can also be pasted to a
-layer within QGIS.
+Features can also be pasted to external applications as text. That is, the
+features are represented in CSV format, with the geometry data appearing in
+the OGC Well-Known Text (WKT) format. WKT and GeoJSON features from outside QGIS
+can also be pasted to a layer within QGIS.
 
-When would the copy and paste function come in handy? Well, it turns
-out that you can edit more than one layer at a time
-and copy/paste features between layers. Why would we want to do this?
-Say we need to do some work on a new layer but only need one or two
-lakes, not the 5,000 on our ``big_lakes`` layer.
-We can create a new layer and use copy/paste to plop the needed lakes
-into it.
+When would the copy and paste function come in handy? Well, it turns out that
+you can edit more than one layer at a time
+and copy/paste features between layers. Why would we want to do this? Say
+we need to do some work on a new layer but only need one or two lakes, not
+the 5,000 on our ``big_lakes`` layer. We can create a new layer and use
+copy/paste to plop the needed lakes into it.
 
 As an example, we will copy some lakes to a new layer:
 
@@ -653,13 +584,11 @@ make sure the schemas match.
 
 .. tip:: **Copy string attribute into another**
 
-   If you have created a new column in your attribute table with type
-   'string' and want to paste values from another attribute column that
-   has a greater length the length of the column size will be extended
-   to the same amount.
-   This is because the GDAL Shapefile driver starting with GDAL/OGR
-   1.10 knows to auto-extend string and integer fields to dynamically
-   accommodate for the length of the data to be inserted.
+   If you have created a new column in your attribute table with type 'string'
+   and want to paste values from another attribute column that has a greater length
+   the length of the column size will be extended to the same amount. This is because
+   the GDAL Shapefile driver starting with GDAL/OGR 1.10 knows to auto-extend string
+   and integer fields to dynamically accommodate for the length of the data to be inserted.
 
 .. _delete_feature:
 
@@ -670,8 +599,8 @@ If we want to delete an entire feature (attribute and geometry), we can do that
 by first selecting the geometry using the regular |selectRectangle| :sup:`Select
 Features by area or single click` tool. Selection can also be done from the attribute
 table. Once you have the selection set, press :kbd:`Delete` or :kbd:`Backspace`
-key or use the |deleteSelectedFeatures| :sup:`Delete Selected` tool to delete
-the features. Multiple selected features can be deleted at once.
+key or use the |deleteSelected| :sup:`Delete Selected` tool to delete the
+features. Multiple selected features can be deleted at once.
 
 The |editCut| :sup:`Cut Features` tool on the digitizing toolbar can
 also be used to delete features. This effectively deletes the feature but
@@ -785,7 +714,7 @@ Advanced digitizing
 +---------------------------+-----------------------------------------+------------------------+-------------------------+
 | |addRing|                 | Add Ring                                | |addPart|              | Add Part                |
 +---------------------------+-----------------------------------------+------------------------+-------------------------+
-| |fillRing|                | Fill Ring                               | |reverseLine|          | Swap direction          |
+| |fillRing|                | Fill Ring                               |                        |                         |
 +---------------------------+-----------------------------------------+------------------------+-------------------------+
 | |deleteRing|              | Delete Ring                             | |deletePart|           | Delete Part             |
 +---------------------------+-----------------------------------------+------------------------+-------------------------+
@@ -797,8 +726,11 @@ Advanced digitizing
 +---------------------------+-----------------------------------------+------------------------+-------------------------+
 | |rotatePointSymbols|      | Rotate Point Symbols                    | |offsetPointSymbols|   | Offset Point Symbols    |
 +---------------------------+-----------------------------------------+------------------------+-------------------------+
-| |trimExtend|              | Trim or Extend Feature                  |                        |                         |
-+---------------------------+-----------------------------------------+------------------------+-------------------------+
+
+..
+ The next feature belongs to QGIS > 3.4 so should be uncommented when the 3.4 is branched away.
+ | |trimExtend|              | Trim or Extend Feature                  |                        |                         |
+ +---------------------------+-----------------------------------------+------------------------+-------------------------+
 
 Table Advanced Editing: Vector layer advanced editing toolbar
 
@@ -834,8 +766,8 @@ The |moveFeature| :sup:`Move Feature(s)` tool allows you to move existing featur
    to place the end point of the translation.
 #. Click on the map canvas: the whole features are moved to new location.
 
-Likewise, you can create a translated copy of the feature(s) using the
-|moveFeatureCopy| :sup:`Copy and Move Feature(s)` tool.
+Likewise, you can create a translated copy of the feature(s) using the |moveFeatureCopy|
+:sup:`Copy and Move Feature(s)` tool.
 
 .. note::
 
@@ -851,29 +783,21 @@ Likewise, you can create a translated copy of the feature(s) using the
 Rotate Feature(s)
 -----------------
 
-Use the |rotateFeature| :sup:`Rotate Feature(s)` tool to rotate one or multiple
-features in the map canvas:
+Use |rotateFeature| :sup:`Rotate Feature(s)` to rotate one or multiple features
+in the map canvas. Press the |rotateFeature| :sup:`Rotate Feature(s)` icon and then
+click on the feature to rotate. Either click on the map to place the rotated feature or
+enter an angle in the user input widget. If you want to rotate several features,
+they shall be selected first.
 
-#. Press the |rotateFeature| :sup:`Rotate Feature(s)` icon
-#. Then click on the feature to rotate. The feature's centroid is referenced as
-   rotation center, a preview of the rotated feature is displayed and a widget
-   opens showing the current :guilabel:`Rotation` angle.
-#. Click on the map canvas when you are satisfied with the new placement or
-   manually enter the rotation angle in the text box. You can also use the
-   :guilabel:`Snap to °` box to constrain the rotation values.
-#. If you want to rotate several features at once, they shall be selected first,
-   and the rotation is by default around the centroid of their combined
-   geometries.
-
-You can also use an anchor point different from the default feature centroid:
-press the :kbd:`Ctrl` button, click on the map canvas and that point will be
-used as the new rotation center.
+If you enable the map tool with feature(s) selected, its (their) centroid appears
+and will be the rotation anchor point. If you want to move the anchor point,
+hold the :kbd:`Ctrl` button  and click on the map to place it.
 
 If you hold :kbd:`Shift` before clicking on the map, the rotation will be done
 in 45 degree steps, which can be modified afterwards in the user input widget.
 
-To abort feature rotation, press the :kbd:`ESC` button or click on the
-|rotateFeature| :sup:`Rotate Feature(s)` icon.
+To abort feature rotation, you need to click on |rotateFeature| :sup:`Rotate
+Feature(s)` icon.
 
 .. index::
    single: Digitizing tools; Simplify Feature
@@ -915,7 +839,7 @@ vertices, as long as the geometry remains valid:
 #. A summary of the modifications that would apply is shown at the bottom of the
    dialog, listing number of features and number of vertices (before and after
    the operation and the ratio the change represents).
-   Also, in the map canvas, the expected geometry is displayed over the existing
+   Also, in the map canvas, the expected geometry is diplayed over the existing
    one, using the rubberband color.
 #. When the expected geometry fits your needs, click :guilabel:`OK` to apply the
    modification.
@@ -1054,10 +978,10 @@ extend it.
 
    Reshape polygon
 
-With polygons, reshaping can sometimes lead to unintended results.
-It is mainly useful to replace smaller parts of a polygon, not for
-major overhauls, and the reshape line is not allowed to cross several
-polygon rings, as this would generate an invalid polygon.
+With polygons, reshaping can sometimes lead to unintended results. It is mainly useful
+to replace smaller parts of a polygon, not for major overhauls, and the reshape
+line is not allowed to cross several polygon rings, as this would generate an
+invalid polygon.
 
 .. note::
    The reshape tool may alter the starting position of a polygon ring or a
@@ -1073,39 +997,22 @@ polygon rings, as this would generate an invalid polygon.
 Offset Curves
 -------------
 
-The |offsetCurve| :sup:`Offset Curve` tool creates parallel shifts of
-line layers.
+The |offsetCurve| :sup:`Offset Curve` tool creates parallel shifts of line layers.
 The tool can be applied to the edited layer (the geometries are modified)
 or also to background layers (in which case it creates copies of the lines /
 rings and adds them to the edited layer).
 It is thus ideally suited for the creation of distance line layers.
 The :guilabel:`User Input` dialog pops-up, showing the displacement distance.
 
-To create a shift of a line layer, you must first go into editing mode
-and activate the |offsetCurve| :sup:`Offset Curve` tool.
-Then click on a feature to shift it.
-Move the mouse and click where wanted or enter the desired distance in
-the user input widget.
-Your changes may then be saved with the |saveEdits|
-:sup:`Save Layer Edits` tool.
-
+To create a shift of a line layer, you must first go into editing mode and activate the
+|offsetCurve| :sup:`Offset Curve` tool. Then click on a feature to shift it.
+Move the mouse and click where wanted or enter the desired distance in the user
+input widget. Your changes may then be saved with the |saveEdits| :sup:`Save Layer Edits` tool.
 
 QGIS options dialog (Digitizing tab then **Curve offset tools** section) allows
 you to configure some parameters like **Join style**, **Quadrant segments**,
 **Miter limit**.
 
-.. index::
-   single: Digitizing tools; Reverse Line
-.. _reverse_line:
-
-Reverse Line
-------------
-Changing the direction of a line geometry can be useful for
-cartographical purposes or when preparing for network analysis.
-
-Activate the reverse line tool by clicking |reverseLine|
-:sup:`Reverse line`.
-Select the line with the cursor to change the direction of the line.
 
 .. index::
    single: Digitizing tools; Split Features
@@ -1182,12 +1089,12 @@ a multipolygon/multipolyline/multipoint feature is created.
      Sum, Count, Concatenation... depending on the type of the field.
      see :ref:`statistical_summary` for the full list of functions).
 
-   .. note::
+   .. note:: 
     If the layer has default values or clauses present on fields,
     these are used as the initial value for the merged feature.
 
 #. Press :guilabel:`OK` to apply the modifications. A single (multi)feature is
-   created in the layer, replacing the previously selected ones.
+   created in the layer, replacing the previously selected ones. 
 
 .. index::
    single: Digitizing tools; Merge Attributes
@@ -1220,7 +1127,7 @@ rotation of point symbols in the map canvas.
       the symbol editor dialog.
    #. Click the |dataDefined| :guilabel:`Data-defined override` widget near the
       :guilabel:`Rotation` option of the top :guilabel:`Marker` level (preferably)
-      of the symbol layers.
+      of the symbol layers. 
    #. Choose a field in the :guilabel:`Field Type` combobox. Values of this
       field are hence used to rotate each feature's symbol accordingly.
 
@@ -1239,14 +1146,11 @@ rotation of point symbols in the map canvas.
 
       Rotating a point symbol
 
-#. Then click on a point feature in the map canvas with the
-   |rotatePointSymbols| :sup:`Rotate Point Symbols` and move the mouse
-   around, holding the left button pressed.
-   A red arrow with the rotation value will be visualized (see
-   Figure_rotate_point_).
-#. Release the left mouse button again, the symbol is defined with
-   this new rotation and the rotation field is updated in the layer's
-   attribute table.
+#. Then click on a point feature in the map canvas with the |rotatePointSymbols|
+   :sup:`Rotate Point Symbols` and move the mouse around, holding the left button
+   pressed. A red arrow with the rotation value will be visualized (see Figure_rotate_point_).
+#. Release the left mouse button again, the symbol is defined with this new rotation
+   and the rotation field is updated in the layer's attribute table.
 
 .. tip::
    If you hold the :kbd:`Ctrl` key pressed, the rotation will be done in 15
@@ -1271,41 +1175,38 @@ coordinates while moving the symbol in the map canvas.
    :sup:`Vertex Tool (Current Layer)` or |moveFeaturePoint| :sup:`Move Feature`
    tool for this purpose.
 
-.. _trim_extend_feature:
+..
+ The next feature belongs to QGIS > 3.4 so should be uncommented when the 3.4 is branched away.
+ Trim/Extend Feature
+ -------------------
 
-Trim/Extend Feature
--------------------
+ When a digitized line is too short or too long to snap to another line (missing or
+ crossing the line), it is necessary to be able to extend or shorten the segment.
 
-When a digitized line is too short or too long to snap to another line (missing or
-crossing the line), it is necessary to be able to extend or shorten the segment.
+ The |trimExtend| :sup:`Trim/Extend` tool allows you to also modify (multi)lines AND
+ (multi)polygons. Moreover, it is not necessarily the end
+ of the lines that is concerned; any segment of a geometry can be modified.
 
-The |trimExtend| :sup:`Trim/Extend` tool allows you to also modify
-(multi)lines AND (multi)polygons.
-Moreover, it is not necessarily the end of the lines that is
-concerned; any segment of a geometry can be modified.
+ .. note:: This can lead to invalid geometries.
 
-.. note:: This can lead to invalid geometries.
+ .. note:: You must activate segment snapping for this tool to work
+ 
+ The tool asks you to select a limit (a segment) with respect to which another
+ segment will be extended or trimmed. Unlike the node tool, a check is performed to
+ modify only the layer being edited.
 
-.. note:: You must activate segment snapping for this tool to work.
+ When both segments are in 3D, the tool performs an interpolation on the limit segment
+ to get the Z value.
 
-The tool asks you to select a limit (a segment) with respect to which
-another segment will be extended or trimmed.
-Unlike the vertex tool, a check is performed to modify only the layer
-being edited.
-
-When both segments are in 3D, the tool performs an interpolation on
-the limit segment to get the Z value.
-
-In the case of a trim, you must select the part that will be shortened
-by clicking on it.
+ In the case of a trim, you must select the part that will be shortened by clicking on it.
 
 .. _shape_edit:
 
 Shape digitizing
 ================
 
-The :guilabel:`Shape Digitizing` toolbar offers a set of tools to draw
-regular shapes and curved geometries.
+The :guilabel:`Shape Digitizing` toolbar offers a set of tools to draw regular
+shapes and curved geometries.
 
 .. index:: Circular string
 .. _add_circular_string:
@@ -1326,9 +1227,9 @@ geometries.
 .. note:: **Curved geometries are stored as such only in compatible data provider**
 
    Although QGIS allows to digitize curved geometries within any editable
-   data format, you need to be using a data provider (e.g. PostGIS, memory
-   layer, GML or WFS) that supports curves to have features stored as
-   curved, otherwise QGIS segmentizes the circular arcs.
+   data format, you need to be using a data provider (e.g. PostGIS, memory layer, GML or WFS)
+   that supports curves to have features stored as curved, otherwise QGIS
+   segmentizes the circular arcs.
 
 
 .. index::
@@ -1389,7 +1290,7 @@ Keyboard shortcuts
 ------------------
 
 To speed up the use of Advanced Digitizing Panel, there are a couple of keyboard
-shortcuts available:
+shorcuts available:
 
 +----------+-------------------+-------------------------------+---------------------------------------+
 | Key      | Simple            | :kbd:`Ctrl+` or :kbd:`Alt+`   | :kbd:`Shift+`                         |
@@ -1599,7 +1500,7 @@ To edit features in-place:
    * They do not change the geometry type, e.g. from line to point layer.
 
    .. figure:: img/edit_inplace_algorithms.png
-      :align: center
+      :align: center 
 
       Processing algorithms: all (left) vs polygon in-place editors (right)
 
@@ -1613,7 +1514,7 @@ To edit features in-place:
       the algorithm dialog pops up. Fill in the required information.
    #. Click :guilabel:`Modify Selected Features` or :guilabel:`Modify All Features`
       depending on whether there's an active selection.
-
+   
    Changes are applied to the layer and placed in the edit buffer: the layer
    is indeed toggled to editing mode with unsaved modification as indicated by
    the |editableEdits| icon next to the layer name.
@@ -1627,8 +1528,7 @@ To edit features in-place:
    If you need to create a new substitution manually,
    please add it also to the substitutions.txt file in the
    source folder.
-.. |reverseLine| image:: /static/common/mActionReverseLine.png
-   :width: 1.5em
+
 .. |addPart| image:: /static/common/mActionAddPart.png
    :width: 1.5em
 .. |addRing| image:: /static/common/mActionAddRing.png
@@ -1663,9 +1563,11 @@ To edit features in-place:
    :width: 2em
 .. |deleteRing| image:: /static/common/mActionDeleteRing.png
    :width: 2em
-.. |deleteSelectedFeatures| image:: /static/common/mActionDeleteSelectedFeatures.png
+.. |deleteSelected| image:: /static/common/mActionDeleteSelected.png
    :width: 1.5em
 .. |delta| image:: /static/common/delta.png
+   :width: 1.5em
+.. |editableEdits| image:: /static/common/mIconEditableEdits.png
    :width: 1.5em
 .. |editCopy| image:: /static/common/mActionEditCopy.png
    :width: 1.5em
@@ -1673,8 +1575,6 @@ To edit features in-place:
    :width: 1.5em
 .. |editPaste| image:: /static/common/mActionEditPaste.png
    :width: 1.5em
-.. |editableEdits| image:: /static/common/mIconEditableEdits.png
-   :width: 1em
 .. |fileSaveAs| image:: /static/common/mActionFileSaveAs.png
    :width: 1.5em
 .. |fillRing| image:: /static/common/mActionFillRing.png
@@ -1730,18 +1630,14 @@ To edit features in-place:
 .. |settings| image:: /static/common/settings.png
    :width: 1.5em
 .. |simplifyFeatures| image:: /static/common/mActionSimplify.png
-   :width: 1.5em
+   :width: 2em
 .. |snapping| image:: /static/common/mIconSnapping.png
-   :width: 1.5em
-.. |snappingIntersection| image:: /static/common/mIconSnappingIntersection.png
    :width: 1.5em
 .. |splitFeatures| image:: /static/common/mActionSplitFeatures.png
    :width: 1.5em
 .. |splitParts| image:: /static/common/mActionSplitParts.png
    :width: 1.5em
 .. |toggleEditing| image:: /static/common/mActionToggleEditing.png
-   :width: 1.5em
-.. |topopologicalEditing| image:: /static/common/mIconTopologicalEditing.png
    :width: 1.5em
 .. |tracing| image:: /static/common/mActionTracing.png
    :width: 1.5em
@@ -1751,6 +1647,7 @@ To edit features in-place:
    :width: 1.3em
 .. |undo| image:: /static/common/mActionUndo.png
    :width: 1.5em
+.. |updatedisclaimer| replace:: :disclaimer:`Docs in progress for 'QGIS testing'. Visit https://docs.qgis.org/2.18 for QGIS 2.18 docs and translations.`
 .. |vertexTool| image:: /static/common/mActionVertexTool.png
    :width: 1.5em
 .. |vertexToolActiveLayer| image:: /static/common/mActionVertexToolActiveLayer.png
