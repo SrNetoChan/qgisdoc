@@ -3,7 +3,7 @@
 
 # You can set these variables from the command line.
 LANG            = en
-SPHINXOPTS      =
+SPHINXOPTS      +=
 SPHINXINTLOPTS  = $(SPHINXOPTS) -D language=$(LANG)
 SPHINXBUILD     ?= sphinx-build
 SPHINXINTL      ?= sphinx-intl
