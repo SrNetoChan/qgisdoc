@@ -25,7 +25,7 @@ feature has the following functionalities (see figure_layout_html_):
 
 .. _figure_layout_html:
 
-.. figure:: img/html_properties.png
+.. figure:: img/html_properties22.png
    :align: center
 
    HTML Frame, the Item Properties Panel
